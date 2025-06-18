@@ -1,80 +1,100 @@
 # CST8919 Lab 2: Building a Web App with Threat Detection using Azure Monitor and KQL
 
+## 🎥 YouTube Demo
 
-## Objective
+Youtube Demo Link: https://youtu.be/4HxNLOUnecw 
 
-In this lab, you will:
-- Create a simple Demo Python Flask app
-- Deploy a the app to Azure App Service
-- Enable diagnostic logging with Azure Monitor
-- Use Kusto Query Language (KQL) to analyze logs
-- Create an alert rule to detect suspicious activity and send it to your email
+
+# 🔐 Flask Login Monitor – Azure Security Lab
+
+## 🚀 Overview
+
+This project is a demonstration of securing a simple Python Flask web application by integrating it with **Azure App Service**, **Azure Monitor**, and **Log Analytics** to detect and alert on suspicious login activities (e.g., brute-force attacks).
+
+The app logs both successful and failed login attempts, and we use **Kusto Query Language (KQL)** to analyze the logs and create an **alert rule** when brute-force patterns are detected.
+
 ---
-## Scenario
-As a cloud security engineer, you're tasked with securing a simple web application. The app logs login attempts. You must detect brute-force login behavior and configure an automatic alert when it occurs.
 
-## Tasks
+## 🛠️ Technologies Used
 
-### Part 1: Deploy the Flask App to Azure
-1. Develop a Python Flask app with a `/login` route that logs both successful and failed login attempts.
-2. Deploy the app using **Azure Web App**.
+- Python Flask
+- Azure App Service
+- Azure Log Analytics
+- Azure Monitor Alerts
+- KQL (Kusto Query Language)
+- VS Code REST Client (`.http` file for testing)
 
-### Part 2: Enable Monitoring
-1. Create a **Log Analytics Workspace** in the same region.
-2. In your Web App, go to **Monitoring > Diagnostic settings**:
-   - Enable:
-     - `AppServiceConsoleLogs`
-     - `AppServiceHTTPLogs` (optional)
-   - Send to the Log Analytics workspace.
-3. Interact with the app to generate logs (e.g., failed `/login` attempts).
+---
 
+## 📂 Project Structure
 
-You must test your app using a .http file (compatible with VS Code + REST Client) and include that file in your GitHub repo as test-app.http.
-
-### Part 3: Query Logs with KQL
-1. Create a KQL query to find failed login attempts.
-2. Test it
-
-### Part 4: Create an Alert Rule
-1. Go to Azure Monitor > Alerts > + Create > Alert Rule.
-2. Scope: Select your Log Analytics Workspace.
-3. Condition: Use the query you created in the last step.
-4. Set:
-    - Measure: Table rows
-    - Threshold: Greater than 5
-    - Aggregation granularity: 5 minutes
-    - Frequency of evaluation: 1 minute
-    - Add an Action Group to send an email notification.
-    - Name the rule and set Severity (2 or 3).
-    - Save the alert.
-
-## Submission
-### GitHub Repository
-- Initialize a Git repository for your project.
-- Make **frequent commits** with meaningful commit messages.
-- Push your code to a **public GitHub repository**.
-- Include  **YouTube demo link in the README.md**.
-
-Include a `README.md` with:
-  - Briefly describe what you learned during this lab, challenges you faced, and how you’d improve the detection logic in a real-world scenario.
-  - Your KQL query with explanation
-
-- **A link to a 5-minute YouTube video demo** showing:
-  - App deployed
-  - Log generation and inspection in Azure Monitor
-  - KQL query usage
-  - Alert configuration and triggering
-
-You must test your app using a .http file (compatible with VS Code + REST Client) and include that file in your GitHub repo as test-app.http.
+flask-login-monitor/
+│
+├── app.py # Flask application
+├── requirements.txt # Python dependencies
+├── test-app.http # VS Code REST Client test script
+└── README.md # Project documentation
 
 
 ---
 
-## Submission Instructions
+## 📦 Setup Instructions
 
-Submit your **GitHub repository link** via Brightspace.
-
-**Deadline**: Wednesday, 18 June 2025
+1. **Create Flask App** (`app.py`)
+2. **Deploy to Azure App Service**
+3. **Enable Diagnostic Logs**
+4. **Generate Test Logs** using `test-app.http`
+5. **Query Logs with KQL**
+6. **Create Azure Monitor Alert Rule**
 
 ---
 
+## 🧪 Testing the App
+
+Test login attempts with the `test-app.http` file via REST Client extension in VS Code:
+
+```http
+### Successful login
+POST https://<your-app-name>.azurewebsites.net/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "password123"
+}
+
+### Failed login
+POST https://<your-app-name>.azurewebsites.net/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "wrongpass"
+}
+```
+
+## 📊 KQL Query for Detecting Failed Logins
+
+```
+AppServiceConsoleLogs
+| where TimeGenerated > ago(30m)
+| where Message contains "Failed login attempt"
+```
+## Explanation:
+
+- AppServiceConsoleLogs: The log table that captures application logs.
+- TimeGenerated > ago(30m): Filters logs from the last 30 minutes.
+- Message contains "Failed login attempt": Finds failed login attempts by matching log message content.
+
+## 🚨 Azure Monitor Alert Rule
+
+Configuration:
+
+- Scope: Log Analytics Workspace
+- Condition:
+Custom log query using above KQL
+- Threshold: Greater than 5 results
+- Granularity: 5 minutes
+- Frequency: 1 minute
+- Action Group: Sends email alert
+- Severity: 2 (High)
