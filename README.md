@@ -98,3 +98,18 @@ Custom log query using above KQL
 - Frequency: 1 minute
 - Action Group: Sends email alert
 - Severity: 2 (High)
+
+##  Lessons Learned:
+
+- Gained hands-on experience with Azure App Service deployment and diagnostic logging.
+- Learned how to use KQL for log analysis in real-time scenarios.
+- Understood how to configure real-time alerts for potential brute-force login activity.
+- Practiced integrating Flask logging with Azure Monitor for centralized monitoring.
+  
+## 🔧 Improvements for Real-World Scenarios:
+
+- Use IP-based rate limiting to block brute-force attempts.
+- Include user-agent and IP in the logs for better analysis.
+- Geo-location awareness for detecting login attempts from unusual regions.
+- Integration with SIEM systems for deeper security analytics.
+- JWT or OAuth-based authentication for better security.
