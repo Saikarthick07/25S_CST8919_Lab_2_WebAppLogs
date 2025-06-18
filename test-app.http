@@ -1,0 +1,17 @@
+### ✅ Successful login
+POST https://flaskapp-sample.azurewebsites.net/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "password123"
+}
+
+### ❌ Failed login
+POST https://flaskapp-sample.azurewebsites.net/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "wrongpassword"
+}
